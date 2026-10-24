@@ -60,6 +60,7 @@ a:hover { text-decoration: underline; }
 .site-nav { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
 .site-nav a { color: var(--muted); padding: 6px 10px; border-radius: 8px; font-size: 14.5px; }
 .site-nav a:hover { color: var(--text); background: var(--card); text-decoration: none; }
+.site-nav .lang-switch { border: 1px solid var(--line); color: var(--text); margin-left: 6px; }
 
 /* layout */
 main { display: block; padding-bottom: 60px; }

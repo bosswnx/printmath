@@ -1,4 +1,5 @@
 // Site shell: <head>, nav, footer, and structured-data helpers.
+const { t, lang, isDefault, localePath, hasTranslation, HTML_LANG } = require('./i18n');
 
 // Deployment-aware config. Set SITE_URL / BASE_PATH to deploy under a subpath
 // (e.g. GitHub Pages project sites) without changing any link code.
@@ -29,12 +30,12 @@ const attr = esc;
 
 function nav() {
   const items = [
-    ['/tools/', 'Tools'],
-    ['/cost/', 'Costs'],
-    ['/filaments/', 'Filaments'],
-    ['/printers/', 'Printers'],
-    ['/settings/', 'Settings'],
-    ['/troubleshooting/', 'Troubleshooting'],
+    ['/tools/', t('nav.tools', 'Tools')],
+    ['/cost/', t('nav.cost', 'Costs')],
+    ['/filaments/', t('nav.filaments', 'Filaments')],
+    ['/printers/', t('nav.printers', 'Printers')],
+    ['/settings/', t('nav.settings', 'Settings')],
+    ['/troubleshooting/', t('nav.troubleshooting', 'Troubleshooting')],
   ];
   return `<header class="site-head">
   <div class="wrap head-inner">
@@ -44,10 +45,24 @@ function nav() {
     </a>
     <nav class="site-nav" aria-label="Main">
       ${items.map(([href, label]) => `<a href="${href}">${esc(label)}</a>`).join('\n      ')}
+      ${langSwitch()}
     </nav>
   </div>
 </header>`;
 }
+
+// Language switcher. Links to the same page in the other language when it exists,
+// otherwise to that language's home.
+function langSwitch() {
+  if (isDefault()) {
+    const target = hasTranslation(CURRENT_PATH) ? localePath(CURRENT_PATH, 'zh') : '/zh/';
+    if (!hasTranslation('/')) return '';
+    return `<a class="lang-switch" data-no-i18n href="${target}" hreflang="zh-Hans" lang="zh-Hans">中文</a>`;
+  }
+  return `<a class="lang-switch" data-no-i18n href="${CURRENT_PATH}" hreflang="en" lang="en">English</a>`;
+}
+
+let CURRENT_PATH = '/';
 
 function footer() {
   return `<footer class="site-foot">
@@ -55,42 +70,47 @@ function footer() {
     <div class="foot-cols">
       <div>
         <div class="brand small"><span class="brand-mark" aria-hidden="true"></span> ${esc(SITE.name)}</div>
-        <p class="muted">${esc(SITE.tagline)}. Values are starting points — always verify with a test print.</p>
+        <p class="muted">${esc(t('brand.tagline', SITE.tagline))}</p>
       </div>
       <div>
-        <h4>Tools</h4>
-        <a href="/tools/cost-calculator/">Print cost calculator</a>
-        <a href="/tools/gcode-analyzer/">G-code analyzer</a>
-        <a href="/tools/filament-length/">Filament length &amp; weight</a>
-        <a href="/tools/spool-remaining/">Spool remaining</a>
-        <a href="/tools/">All tools</a>
+        <h4>${esc(t('footer.tools', 'Tools'))}</h4>
+        <a href="/tools/cost-calculator/">${esc(t('tool.cost.short', 'Print cost calculator'))}</a>
+        <a href="/tools/gcode-analyzer/">${esc(t('tool.gcode.short', 'G-code analyzer'))}</a>
+        <a href="/tools/filament-length/">${esc(t('tool.length.short', 'Filament length & weight'))}</a>
+        <a href="/tools/spool-remaining/">${esc(t('tool.spool.short', 'Spool remaining'))}</a>
+        <a href="/tools/">${esc(t('common.allTools', 'All tools'))}</a>
       </div>
       <div>
-        <h4>Reference</h4>
-        <a href="/filaments/">Filament guide</a>
-        <a href="/printers/">Printer database</a>
-        <a href="/settings/">Settings by printer</a>
-        <a href="/troubleshooting/">Troubleshooting</a>
+        <h4>${esc(t('footer.reference', 'Reference'))}</h4>
+        <a href="/filaments/">${esc(t('fl.h1', 'Filament guide'))}</a>
+        <a href="/printers/">${esc(t('nav.printers', 'Printers'))}</a>
+        <a href="/settings/">${esc(t('nav.settings', 'Settings'))}</a>
+        <a href="/troubleshooting/">${esc(t('nav.troubleshooting', 'Troubleshooting'))}</a>
       </div>
       <div>
-        <h4>Site</h4>
-        <a href="/about/">About</a>
-        <a href="/privacy/">Privacy</a>
-        <a href="/terms/">Terms</a>
-        <a href="mailto:${attr(SITE.email)}">Contact</a>
+        <h4>${esc(t('footer.site', 'Site'))}</h4>
+        <a href="/about/">${esc(t('footer.about', 'About'))}</a>
+        <a href="/privacy/">${esc(t('footer.privacy', 'Privacy'))}</a>
+        <a href="/terms/">${esc(t('footer.terms', 'Terms'))}</a>
+        <a href="mailto:${attr(SITE.email)}">${esc(t('footer.contact', 'Contact'))}</a>
       </div>
     </div>
-    <p class="muted tiny">© ${SITE.year} ${esc(SITE.name)}. Not affiliated with any printer manufacturer. As an Amazon Associate we may earn from qualifying purchases.</p>
+    <p class="muted tiny">© ${SITE.year} ${esc(SITE.name)}. ${esc(t('footer.affiliate', 'Not affiliated with any printer manufacturer. As an Amazon Associate we may earn from qualifying purchases.'))}</p>
   </div>
 </footer>`;
 }
 
 function layout({ title, description, path = '/', body = '', jsonLd = [], noindex = false, head = '' }) {
-  const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} — ${SITE.tagline}`;
-  const url = `${SITE.baseUrl}${path}`;
+  CURRENT_PATH = path;
+  const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} — ${t('brand.tagline', SITE.tagline)}`;
+  const url = `${SITE.baseUrl}${localePath(path)}`;
   const desc = description || SITE.description;
+  const hrefFor = (p, l) => `${SITE.baseUrl}${localePath(p, l)}`;
+  const alternates = `<link rel="alternate" hreflang="x-default" href="${attr(hrefFor(path, 'en'))}">
+<link rel="alternate" hreflang="en" href="${attr(hrefFor(path, 'en'))}">
+${hasTranslation(path) ? `<link rel="alternate" hreflang="zh-Hans" href="${attr(hrefFor(path, 'zh'))}">` : ''}`.trim();
   return `<!doctype html>
-<html lang="en">
+<html lang="${HTML_LANG[lang()] || 'en'}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -98,6 +118,7 @@ function layout({ title, description, path = '/', body = '', jsonLd = [], noinde
 <meta name="description" content="${attr(desc)}">
 ${noindex ? '<meta name="robots" content="noindex,follow">' : ''}
 <link rel="canonical" href="${attr(url)}">
+${alternates}
 <meta property="og:type" content="website">
 <meta property="og:title" content="${attr(fullTitle)}">
 <meta property="og:description" content="${attr(desc)}">
@@ -141,7 +162,7 @@ function breadcrumbs(items) {
       '@type': 'ListItem',
       position: i + 1,
       name: it.name,
-      item: `${SITE.baseUrl}${it.path}`,
+      item: `${SITE.baseUrl}${localePath(it.path, isDefault() ? 'en' : hasTranslation(it.path) ? lang() : 'en')}`,
     })),
   };
 }
