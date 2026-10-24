@@ -30,6 +30,7 @@ const attr = esc;
 function nav() {
   const items = [
     ['/tools/', 'Tools'],
+    ['/cost/', 'Costs'],
     ['/filaments/', 'Filaments'],
     ['/printers/', 'Printers'],
     ['/settings/', 'Settings'],

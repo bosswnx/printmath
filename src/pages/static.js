@@ -3,6 +3,7 @@ const { crumbs } = require('../lib/ui');
 const { filaments, byId } = require('../data/filaments');
 const { printers } = require('../data/printers');
 const { symptoms } = require('../data/symptoms');
+const { objects } = require('../data/objects');
 
 const COMPARISONS = [
   ['pla', 'petg'], ['pla', 'abs'], ['pla', 'pla-plus'], ['petg', 'abs'], ['abs', 'asa'],
@@ -42,6 +43,13 @@ ${printers.slice(0, 9).map((p) => `    <a class="card link" href="/settings/${p.
 ${symptoms.slice(0, 6).map((s) => `    <a class="card link" href="/troubleshooting/${s.id}/"><h3>${esc(s.name.split('(')[0].trim())}</h3></a>`).join('\n')}
   </div>
   <p><a href="/troubleshooting/">All ${symptoms.length} problems →</a></p>
+
+  <h2>What does it cost to print…?</h2>
+  <p class="muted">Real costs for common objects, broken down by material.</p>
+  <div class="grid cols-3">
+${objects.slice(0, 6).map((o) => `    <a class="card link" href="/cost/${o.id}/"><h3>${esc(o.name)}</h3><p class="muted tiny">${o.weightG} g · ${o.hours} h</p></a>`).join('\n')}
+  </div>
+  <p><a href="/cost/">All ${objects.length} cost guides →</a></p>
 
   <h2>Choose a filament</h2>
   <div class="grid cols-3">

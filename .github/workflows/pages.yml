@@ -1,7 +1,5 @@
 name: Build and deploy
 
-# Rebuilds the site on every push, and once a night so the "nightly loop" has
-# a fresh build to attach its report to.
 on:
   push:
     branches: [main]
@@ -22,16 +20,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      # To move to a custom domain later, set repository variables:
-      #   gh variable set SITE_URL  --body "https://printmath.io"
-      #   gh variable set BASE_PATH --body ""
-      SITE_URL: ${{ vars.SITE_URL || 'https://bosswnx.github.io/printmath' }}
-      BASE_PATH: ${{ vars.BASE_PATH || '/printmath' }}
+      # One switch for the whole deployment. Change it and everything follows:
+      # canonical URLs, sitemap, robots.txt and every internal link.
+      #   gh variable set DEPLOY_URL --body "https://printmath.bosswnx.xyz"
+      #   gh variable set DEPLOY_URL --body "https://bosswnx.github.io/printmath"
+      DEPLOY_URL: ${{ vars.DEPLOY_URL || 'https://bosswnx.github.io/printmath' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Resolve site URL and base path
+        run: |
+          echo "SITE_URL=$DEPLOY_URL" >> "$GITHUB_ENV"
+          case "$DEPLOY_URL" in
+            *".github.io/"*) echo "BASE_PATH=/printmath" >> "$GITHUB_ENV" ;;
+            *)               echo "BASE_PATH=" >> "$GITHUB_ENV" ;;
+          esac
       - name: Build site
         run: node src/build.js
       - name: Verify (links, titles, duplicates)

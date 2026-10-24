@@ -8,6 +8,7 @@ const { buildFilaments } = require('./pages/filaments');
 const { buildPrinters } = require('./pages/printers');
 const { buildSettings } = require('./pages/settings');
 const { buildTroubleshooting } = require('./pages/troubleshooting');
+const { buildCost } = require('./pages/cost');
 const { buildStatic, notFound } = require('./pages/static');
 
 const ROOT = path.join(__dirname, '..');
@@ -52,6 +53,7 @@ function build() {
   const pages = [
     ...buildStatic(),
     ...buildTools(),
+    ...buildCost(),
     ...buildFilaments(),
     ...buildPrinters(),
     ...buildSettings(),
