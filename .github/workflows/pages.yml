@@ -21,18 +21,18 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # To move to a custom domain later, set repository variables:
+      #   gh variable set SITE_URL  --body "https://printmath.io"
+      #   gh variable set BASE_PATH --body ""
+      SITE_URL: ${{ vars.SITE_URL || 'https://bosswnx.github.io/printmath' }}
+      BASE_PATH: ${{ vars.BASE_PATH || '/printmath' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
       - name: Build site
-        # To move to a custom domain later, set repository variables:
-        #   gh variable set SITE_URL  --body "https://printmath.io"
-        #   gh variable set BASE_PATH --body ""
-        env:
-          SITE_URL: ${{ vars.SITE_URL || 'https://bosswnx.github.io/printmath' }}
-          BASE_PATH: ${{ vars.BASE_PATH || '/printmath' }}
         run: node src/build.js
       - name: Verify (links, titles, duplicates)
         run: node src/check.js
