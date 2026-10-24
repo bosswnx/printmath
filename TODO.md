@@ -1,52 +1,40 @@
 # TODO — things that need the user's identity
 
-These are the only steps I cannot do myself. Everything else is automated.
+## Done
 
-## Live now (no action needed)
+- **Live site: https://printmath.bosswnx.xyz/** — 388 pages, HTTPS enforced, custom
+  domain on Cloudflare + GitHub Pages. Auto-rebuilt on push and nightly.
+- Cloudflare DNS managed by me (token at `~/.config/opencode/secrets/cloudflare-api-token`).
+- Bing/Yandex/Seznam/Naver: URL list submitted through IndexNow.
+- Repo: https://github.com/bosswnx/printmath
 
-- Site: **https://bosswnx.github.io/printmath/** — 390 pages, live, auto-rebuilt on
-  every push and once nightly (GitHub Actions).
-- Repo: **https://github.com/bosswnx/printmath** (public).
-- Bing/Yandex: all URLs submitted via IndexNow.
+## 1. Google Search Console  ← next, opens up the growth loop
 
-## 1. Point bosswnx.xyz at the site  ← blocking the custom domain
-
-In the Cloudflare dashboard for **bosswnx.xyz** → DNS → Records → Add record:
-
-| Field | Value |
-| --- | --- |
-| Type | `CNAME` |
-| Name | `printmath` |
-| Target | `bosswnx.github.io` |
-| Proxy status | **DNS only** (grey cloud, not orange) |
-| TTL | Auto |
-
-Then tell me, and I will finish the switch automatically:
-set the GitHub Pages custom domain, flip `DEPLOY_URL`, rebuild with root-relative
-links, enable HTTPS and resubmit every URL to IndexNow with the new host.
-
-**Faster alternative:** create a Cloudflare API token with `Zone → DNS → Edit` for
-bosswnx.xyz and save it to `~/.config/opencode/secrets/cloudflare-api-token`.
-Then I can manage DNS myself from now on (and set up Cloudflare Pages, which is
-faster than GitHub Pages).
+1. https://search.google.com/search-console → Add property → **Domain** →
+   `bosswnx.xyz` (a domain property covers every subdomain, so you only do this once).
+2. Cloudflare → DNS → add the **TXT** record Google shows you.
+3. Tell me, or just wait: once it resolves I can finish verification and submit
+   `https://printmath.bosswnx.xyz/sitemap.xml`.
+4. Once a month: Search Console → Performance → Queries → Export CSV, and drop the
+   file into `printmath/data/gsc/`. The nightly job will then target the exact
+   queries that are one push away from page 1.
 
 ## 2. Payments (for the Pro membership)
 
-Register at **https://www.creem.io** (supports mainland-China individuals, pays out
-to Alipay). Create a subscription product, e.g. `PrintMath Pro`, $4/month, and give
-me the checkout link. I will build the paywall around it.
+Register at **https://www.creem.io** (supports mainland-China individuals, pays out to
+Alipay). Create a subscription product, e.g. `PrintMath Pro`, $4/month, and give me the
+checkout link. I will build the paywall around it.
 
-Not urgent: the site makes no money until it has traffic, and traffic takes months.
-Ads and affiliate links come before this.
+Not urgent: the site needs traffic first, and ads + affiliate links come before a
+paywall. Do this around the time the site passes ~1,000 visits a day.
 
-## 3. Google Search Console
+## 3. Affiliate accounts (once there is traffic)
 
-Add property `printmath.bosswnx.xyz`, verify by the DNS TXT record Cloudflare shows
-you, and submit `https://printmath.bosswnx.xyz/sitemap.xml`. Then drop monthly
-Queries CSV exports into `printmath/data/gsc/` so the nightly loop can target
-near-miss keywords.
+Amazon Associates, and/or Bambu Lab / Creality / Polymaker affiliate programs.
+Give me the tracking IDs and I will wire them into the relevant pages
+(filament pages, printer pages, cost guides).
 
-## 4. Affiliate accounts (once there is traffic)
+## 4. Optional: more Cloudflare access
 
-Amazon Associates and/or Bambu Lab / Creality / Polymaker affiliate programs.
-Give me the tracking IDs and I will wire them into the relevant pages.
+If you later want me to manage anything beyond DNS on bosswnx.xyz (Cloudflare Pages,
+email routing, R2), extend the token's permissions. Not needed right now.
