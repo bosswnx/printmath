@@ -6,7 +6,9 @@
   "scripts": {
     "build": "node src/build.js",
     "serve": "node src/build.js && node src/serve.js",
-    "check": "node src/check.js"
+    "check": "node src/check.js",
+    "indexnow": "node scripts/indexnow.js",
+    "loop": "node scripts/loop.js"
   },
   "license": "MIT"
 }
