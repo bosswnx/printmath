@@ -14,6 +14,7 @@ const { buildPrinters } = require('./pages/printers');
 const { buildSettings } = require('./pages/settings');
 const { buildTroubleshooting } = require('./pages/troubleshooting');
 const { buildCost } = require('./pages/cost');
+const { buildGuides } = require('./pages/guides');
 const { buildStatic, notFound } = require('./pages/static');
 
 const ROOT = path.join(__dirname, '..');
@@ -22,7 +23,7 @@ const PUBLIC = path.join(ROOT, 'public');
 
 // Sections that are fully translated. Anything else stays English-only, and links
 // to it from Chinese pages fall back to the English page.
-const ZH_PREFIXES = ['/filaments/', '/troubleshooting/'];
+const ZH_PREFIXES = ['/filaments/', '/troubleshooting/', '/settings/', '/guides/'];
 const ZH_EXACT = new Set(['/', '/about/', '/privacy/', '/terms/', '/search/', '/filaments/compare/']);
 
 const zhReady = (p) => ZH_EXACT.has(p.path) || ZH_PREFIXES.some((pre) => p.path.startsWith(pre));
@@ -66,6 +67,7 @@ function buildAll() {
     ...buildSettings(),
     ...buildTroubleshooting(),
     ...buildCost(),
+    ...buildGuides(),
   ];
 }
 

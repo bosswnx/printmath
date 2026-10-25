@@ -18,12 +18,12 @@ A niche tool site with three layers, all generated from data:
    - `/tools/spool-remaining/` — weigh a spool, subtract empty weight.
    - `/tools/flow-calculator/` — speed × layer height × line width vs hotend limit.
    - `/tools/farm-calculator/` — throughput, revenue and profit.
-2. **Reference** — 16 filament guides, 20 pairwise comparisons, 22 printers,
+2. **Reference** — 15 filament guides, 20 pairwise comparisons, 22 printers,
    241 printer × material settings pages, 19 troubleshooting guides.
 3. **Programmatic SEO** — every printer × material combination is its own page with
    settings tuned to that machine's extruder (direct vs Bowden), enclosure and speed.
 
-Total: **333 pages**, generated in well under a second, zero dependencies.
+Total: **724 pages** (406 English + 318 Chinese), generated in well under a second, zero dependencies.
 
 ## Commands
 
@@ -37,8 +37,9 @@ npm run check     # verify internal links, titles, descriptions, duplicates
 
 ```
 src/data/      filaments.js  printers.js  symptoms.js   <- the moat: structured data
-src/lib/       site.js (shell, SEO, JSON-LD)  ui.js
-src/pages/     tools.js  filaments.js  printers.js  settings.js  troubleshooting.js  static.js
+src/lib/       site.js (shell, SEO, JSON-LD)  ui.js  i18n.js
+src/i18n/      zh.js (Chinese UI strings and data)
+src/pages/     tools.js  filaments.js  printers.js  settings.js  guides.js  troubleshooting.js  static.js
 src/build.js   static site generator (writes dist/)
 public/        styles.css  app.js  favicon.svg
 scripts/       loop.js (nightly SEO loop)  deploy.sh

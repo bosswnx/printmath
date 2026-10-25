@@ -24,11 +24,18 @@ function isDefault() {
   return CURRENT === 'en';
 }
 
-// UI string. English is the fallback text passed in.
-function t(key, en) {
+// Fill {placeholders} in a string from a vars object. Missing keys are left as
+// they are, so it is safe to pass a translated string that uses different vars.
+function interpolate(str, vars) {
+  if (str == null || !vars) return str;
+  return String(str).replace(/\{(\w+)\}/g, (m, k) => (vars[k] != null ? String(vars[k]) : m));
+}
+
+// UI string. English is the fallback text passed in. vars fill {placeholders}.
+function t(key, en, vars) {
   const d = DICTS[CURRENT];
-  if (d && d.ui && d.ui[key] != null) return d.ui[key];
-  return en != null ? en : key;
+  const s = d && d.ui && d.ui[key] != null ? d.ui[key] : en != null ? en : key;
+  return interpolate(s, vars);
 }
 
 // Data translation: tr('symptoms', 'stringing', 'looks', englishFallback)

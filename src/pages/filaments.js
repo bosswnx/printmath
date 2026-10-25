@@ -65,6 +65,8 @@ function filamentPage(f) {
     </tbody>
   </table></div>
 
+  <p class="note">${t('fl.calibrationNote', 'First time with this material? Run the {cal} before trusting any preset.', { cal: `<a href="/guides/calibration/${f.id}/">${esc(t('cal.linkText', 'calibration guide'))}</a>` })}</p>
+
   <h2>${esc(t('fl.properties', 'Properties'))}</h2>
   <div class="table-scroll"><table>
     <thead><tr><th>${esc(t('fl.vsProperty', 'Property'))}</th><th>${esc(t('fl.vsRating', 'Rating'))}</th></tr></thead>
@@ -124,7 +126,7 @@ ${KEY_COMPARISONS.filter(([a, b]) => a === f.id || b === f.id)
       jsonLd: [
         breadcrumbs([{ name: t('common.home', 'Home'), path: '/' }, { name: t('nav.filaments', 'Filaments'), path: '/filaments/' }, { name, path }]),
         faq([
-          { q: t('fl.q.temp', 'What temperature do I print {name} at?', { name }), a: t('fl.q.tempA', '', { nozzleMin: f.nozzle[0], nozzleMax: f.nozzle[1], bedMin: f.bed[0], bedMax: f.bed[1] }) },
+          { q: t('fl.q.temp', 'What temperature do I print {name} at?', { name }), a: t('fl.q.tempA', 'A common range is {nozzleMin}–{nozzleMax} °C for the nozzle and {bedMin}–{bedMax} °C for the bed. Start in the middle and fine-tune with a temperature tower.', { nozzleMin: f.nozzle[0], nozzleMax: f.nozzle[1], bedMin: f.bed[0], bedMax: f.bed[1] }) },
           { q: t('fl.q.enclosure', 'Does {name} need an enclosure?', { name }), a: f.enclosure ? t('fl.q.enclosureYes', 'Yes, an enclosure is strongly recommended.') : t('fl.q.enclosureNo', 'No, it prints fine on an open-frame printer.') },
         ]),
       ],
@@ -152,7 +154,7 @@ function comparisonPage(aId, bId) {
 <div class="wrap">
   <div class="hero" style="padding-bottom:10px">
     <h1>${esc(t('fl.vsTitle', '{a} vs {b}', { a: an, b: bn }))}</h1>
-    <p class="lead">${esc(t('fl.vsLead', '', { a: an, b: bn }))}</p>
+    <p class="lead">${esc(t('fl.vsLead', '{a} and {b} compared on temperature, strength, heat and UV resistance, difficulty and price — and how to choose.', { a: an, b: bn }))}</p>
   </div>
   <div class="table-scroll"><table>
     <thead><tr><th>${esc(t('fl.vsProperty', 'Property'))}</th><th>${esc(an)}</th><th>${esc(bn)}</th></tr></thead>
@@ -174,7 +176,7 @@ function comparisonPage(aId, bId) {
   <p>${esc(tr('filaments', b.id, 'summary', b.summary))}</p>
 
   <h2>${esc(t('fl.vsWhich', 'Which should you choose?'))}</h2>
-  <p>${esc(t('fl.vsWhichBody', '', { a: an, b: bn, ause: trList('filaments', a.id, 'uses', a.uses)[0].toLowerCase(), buse: trList('filaments', b.id, 'uses', b.uses)[0].toLowerCase() }))}</p>
+  <p>${esc(t('fl.vsWhichBody', 'Pick {a} if you care most about {ause}, or {b} if you care most about {buse}. If you are unsure, buy a small spool of each and print the same test part.', { a: an, b: bn, ause: trList('filaments', a.id, 'uses', a.uses)[0].toLowerCase(), buse: trList('filaments', b.id, 'uses', b.uses)[0].toLowerCase() }))}</p>
 
   <div class="grid cols-2">
     <a class="card link" href="/filaments/${a.id}/"><h3>${esc(an)} ${esc(t('fl.fullGuide', 'full guide'))}</h3></a>

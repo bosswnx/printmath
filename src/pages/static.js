@@ -13,12 +13,12 @@ const sname = (s) => tr('symptoms', s.id, 'name', s.name).split(/[(（]/)[0].tri
 const oname = (o) => tr('objects', o.id, 'name', o.name);
 
 const TOOL_CARDS = [
-  ['/tools/cost-calculator/', 'cost', 'Cost'],
-  ['/tools/gcode-analyzer/', 'gcode', 'Analysis'],
-  ['/tools/filament-length/', 'length', 'Convert'],
-  ['/tools/spool-remaining/', 'spool', 'Convert'],
-  ['/tools/flow-calculator/', 'flow', 'Tuning'],
-  ['/tools/farm-calculator/', 'farm', 'Business'],
+  ['/tools/cost-calculator/', 'cost', 'Cost', 'Print cost calculator', 'Material, electricity, machine wear and labour, plus a suggested selling price and margin.'],
+  ['/tools/gcode-analyzer/', 'gcode', 'Analysis', 'G-code analyzer', 'Drop a .gcode file to get filament length, weight, cost, layer count and print time — in your browser.'],
+  ['/tools/filament-length/', 'length', 'Convert', 'Filament length & weight', 'Convert between grams, metres and cubic centimetres for any material and diameter.'],
+  ['/tools/spool-remaining/', 'spool', 'Convert', 'Spool remaining', 'Weigh a part-used spool to see how many grams and metres are left.'],
+  ['/tools/flow-calculator/', 'flow', 'Tuning', 'Volumetric flow calculator', 'Check whether your speed and layer height exceed what your hotend can melt.'],
+  ['/tools/farm-calculator/', 'farm', 'Business', 'Print farm calculator', 'Estimate throughput, revenue and profit across one or many printers.'],
 ];
 
 function home() {
@@ -26,17 +26,17 @@ function home() {
   const body = `<div class="wrap">
   <div class="hero">
     <h1>${esc(t('home.h1', '3D printing maths, settings and fixes — without the guesswork'))}</h1>
-    <p class="lead">${esc(t('home.lead', '', { n: symptoms.length }))}</p>
+    <p class="lead">${esc(t('home.lead', 'Free tools for print cost, filament use and flow; starting settings for every printer and material; and fixes for {n} common print defects.', { n: symptoms.length }))}</p>
     <p><a class="btn" href="/tools/cost-calculator/">${esc(t('home.ctaCost', 'Calculate a print cost'))}</a> <a class="btn ghost" href="/tools/gcode-analyzer/">${esc(t('home.ctaGcode', 'Analyze a G-code file'))}</a></p>
   </div>
 
   <h2>${esc(t('home.calculators', 'Calculators'))}</h2>
   <div class="grid cols-3">
-${TOOL_CARDS.map(([href, key, kicker]) => `    <a class="card link" href="${href}"><div class="kicker">${esc(t('tool.kicker.' + kicker.toLowerCase(), kicker))}</div><h3>${esc(t('tool.' + key + '.name', ''))}</h3><p class="muted">${esc(t('tool.' + key + '.desc', ''))}</p></a>`).join('\n')}
+${TOOL_CARDS.map(([href, key, kicker, name, desc]) => `    <a class="card link" href="${href}"><div class="kicker">${esc(t('tool.kicker.' + kicker.toLowerCase(), kicker))}</div><h3>${esc(t('tool.' + key + '.name', name))}</h3><p class="muted">${esc(t('tool.' + key + '.desc', desc))}</p></a>`).join('\n')}
   </div>
 
   <h2>${esc(t('home.findSettings', 'Find your settings'))}</h2>
-  <p class="muted">${esc(t('home.findSettingsNote', '', { printers: printers.length, filaments: filaments.length }))}</p>
+  <p class="muted">${esc(t('home.findSettingsNote', 'Starting settings for {printers} printers × {filaments} materials, tuned to each machine’s extruder and enclosure.', { printers: printers.length, filaments: filaments.length }))}</p>
   <div class="grid cols-3">
 ${printers.slice(0, 9).map((p) => `    <a class="card link" href="/settings/${p.id}/"><h3>${esc(p.name)}</h3><p class="muted tiny">${p.build.join('×')} mm · ${p.enclosure ? esc(t('fl.enclosed', 'Enclosed')) : esc(t('fl.openFrame', 'Open frame'))}</p></a>`).join('\n')}
   </div>
