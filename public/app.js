@@ -25,6 +25,36 @@
 
   var SYMBOL = { USD: '$', EUR: '\u20ac', GBP: '\u00a3', CNY: '\u00a5', JPY: '\u00a5', AUD: 'A$', CAD: 'C$', INR: '\u20b9' };
 
+  /* Output strings. The build writes window.PM_LANG before this script loads,
+     so Chinese pages get Chinese results text. Units (g, m, %) stay as they are. */
+  var LANG = (typeof window !== 'undefined' && window.PM_LANG) || 'en';
+  var STR = {
+    en: {
+      within: 'OK — within hotend limit',
+      tooHigh: 'Too high — lower speed or raise temperature',
+      spoolPct: '{n}% of a 1 kg spool',
+      parts: '{n} parts',
+      partsPerDay: '{n} parts/day',
+      shown: '{n} shown'
+    },
+    zh: {
+      within: 'OK — 在热端上限内',
+      tooHigh: '过高 — 降低速度或提高温度',
+      spoolPct: '1 kg 料盘的 {n}%',
+      parts: '{n} 件',
+      partsPerDay: '{n} 件/天',
+      shown: '已显示 {n} 条'
+    }
+  };
+  function L(key, vars) {
+    var d = STR[LANG] || STR.en;
+    var s = d[key] != null ? d[key] : STR.en[key];
+    if (s == null) return key;
+    return String(s).replace(/\{(\w+)\}/g, function (m, k) {
+      return vars && vars[k] != null ? vars[k] : m;
+    });
+  }
+
   function $(root, sel) { return root.querySelector(sel); }
   function num(el, fallback) {
     if (!el) return fallback || 0;
@@ -153,7 +183,7 @@
       setText(root, '[data-out-m]', fmt(mm / 1000, 2) + ' m');
       var bar = $(root, '[data-bar] > span');
       if (bar) bar.style.width = Math.max(0, Math.min(100, pct)) + '%';
-      setText(root, '[data-out-prints]', fmt(remain / (num($(root, '[data-per-part]'), 20) || 20), 1) + ' parts');
+      setText(root, '[data-out-prints]', L('parts', { n: fmt(remain / (num($(root, '[data-per-part]'), 20) || 20), 1) }));
     });
   }
 
@@ -169,7 +199,7 @@
       var sel = $(root, '[data-hotend]');
       var max = sel ? (maxes[sel.value] || 15) : 15;
       setText(root, '[data-out-max]', fmt(max, 0) + ' mm\u00b3/s');
-      var verdict = vol <= max ? 'OK — within hotend limit' : 'Too high — lower speed or raise temperature';
+      var verdict = vol <= max ? L('within') : L('tooHigh');
       var v = $(root, '[data-out-verdict]');
       if (v) { v.textContent = verdict; v.className = vol <= max ? 'pill ok' : 'pill bad'; }
       var maxSpeed = (max / (lh * lw));
@@ -197,9 +227,9 @@
       var profit = revenue - cost;
       var marginPct = revenue > 0 ? (profit / revenue) * 100 : 0;
 
-      setText(root, '[data-out-perprinter]', fmt(partsPerPrinterPerDay, 1) + ' parts/day');
-      setText(root, '[data-out-perday]', fmt(perDay, 1) + ' parts/day');
-      setText(root, '[data-out-permonth]', fmt(perMonth, 0) + ' parts');
+      setText(root, '[data-out-perprinter]', L('partsPerDay', { n: fmt(partsPerPrinterPerDay, 1) }));
+      setText(root, '[data-out-perday]', L('partsPerDay', { n: fmt(perDay, 1) }));
+      setText(root, '[data-out-permonth]', L('parts', { n: fmt(perMonth, 0) }));
       setText(root, '[data-out-revenue]', money(revenue, sym));
       setText(root, '[data-out-cost]', money(cost, sym));
       setText(root, '[data-out-profit]', money(profit, sym));
@@ -282,7 +312,7 @@
       setText(root, '[data-out-layers]', layers ? fmt(layers, 0) : '—');
       setText(root, '[data-out-time]', timeSec ? humanTime(timeSec) : '—');
       var spools = $(root, '[data-out-spools]');
-      if (spools) spools.textContent = fmt((grams / 1000) * 100, 1) + '% of a 1 kg spool';
+      if (spools) spools.textContent = L('spoolPct', { n: fmt((grams / 1000) * 100, 1) });
       var res = $(root, '[data-results]');
       if (res) res.hidden = false;
     }
@@ -327,7 +357,7 @@
         r.style.display = hit ? '' : 'none';
         if (hit) shown++;
       });
-      if (count) count.textContent = shown + ' shown';
+      if (count) count.textContent = L('shown', { n: shown });
     }
     if (input) { input.addEventListener('input', apply); apply(); }
   }

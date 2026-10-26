@@ -23,7 +23,7 @@ A niche tool site with three layers, all generated from data:
 3. **Programmatic SEO** — every printer × material combination is its own page with
    settings tuned to that machine's extruder (direct vs Bowden), enclosure and speed.
 
-Total: **724 pages** (406 English + 318 Chinese), generated in well under a second, zero dependencies.
+Total: **731 pages** (406 English + 325 Chinese), generated in under a second, zero dependencies.
 
 ## Commands
 

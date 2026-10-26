@@ -43,7 +43,7 @@ function nav() {
       <span class="brand-mark" aria-hidden="true"></span>
       <span>${esc(SITE.name)}</span>
     </a>
-    <nav class="site-nav" aria-label="Main">
+    <nav class="site-nav" aria-label="${esc(t('nav.main', 'Main'))}">
       ${items.map(([href, label]) => `<a href="${href}">${esc(label)}</a>`).join('\n      ')}
       ${langSwitch()}
     </nav>
@@ -102,6 +102,7 @@ function footer() {
 
 function layout({ title, description, path = '/', body = '', jsonLd = [], noindex = false, head = '' }) {
   CURRENT_PATH = path;
+  const skipLabel = t('common.skip', 'Skip to content');
   const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} — ${t('brand.tagline', SITE.tagline)}`;
   const url = `${SITE.baseUrl}${localePath(path)}`;
   const desc = description || SITE.description;
@@ -142,12 +143,13 @@ ${jsonLd.map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</sc
 ${head}
 </head>
 <body>
-<a class="skip" href="#main">Skip to content</a>
+<a class="skip" href="#main">${esc(skipLabel)}</a>
 ${nav()}
 <main id="main">
 ${body}
 </main>
 ${footer()}
+<script>window.PM_LANG=${JSON.stringify(lang())};</script>
 <script src="/app.js" defer></script>
 </body>
 </html>`;

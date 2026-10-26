@@ -7,7 +7,7 @@ function crumbs(items) {
     if (i === items.length - 1) return `<span>${esc(it.name)}</span>`;
     return `<a href="${esc(it.path)}">${esc(it.name)}</a>`;
   });
-  return `<nav class="crumbs wrap" aria-label="Breadcrumb">${parts.join(' <span aria-hidden="true">/</span> ')}</nav>`;
+  return `<nav class="crumbs wrap" aria-label="${esc(t('crumb.label', 'Breadcrumb'))}">${parts.join(' <span aria-hidden="true">/</span> ')}</nav>`;
 }
 
 function diffPill(d) {
