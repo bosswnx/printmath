@@ -2,16 +2,16 @@
 
 ## Done
 
-- **Live site: https://printmath.bosswnx.xyz/** — 731 pages (406 English + 325
+- **Live site: https://printmath.bosswnx.xyz/** — 764 pages (407 English + 357
   Chinese), HTTPS enforced, custom domain on Cloudflare + GitHub Pages.
   Auto-rebuilt on push and nightly.
 - Bilingual: Chinese under `/zh/`, with hreflang and a language switch. Chinese
   covers home, about/privacy/terms, the filament guide, troubleshooting, the
   calculators under `/tools/` (labels, notes, intros, FAQs and the client-side
-  result strings) and the full printer × material settings surface. Cost guides
-  and the printer database are next.
+  result strings), the full printer × material settings surface and all 30 cost
+  guides. The printer database is the last untranslated section.
 - Per-material calibration guides (temperature tower + flow test) for all 15
-  filaments, in English and Chinese.
+  filaments, plus the `/guides/calibration/` hub, in English and Chinese.
 - Cloudflare DNS managed by me (token at `~/.config/opencode/secrets/cloudflare-api-token`).
 - Bing/Yandex/Seznam/Naver: URL list submitted through IndexNow.
 - Repo: https://github.com/bosswnx/printmath

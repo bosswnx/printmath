@@ -20,7 +20,10 @@ const exists = (urlPath) => {
   if (SITE.basePath && urlPath.startsWith(SITE.basePath)) urlPath = urlPath.slice(SITE.basePath.length) || '/';
   const clean = urlPath.replace(/^\/|\/$/g, '');
   const f = clean ? path.join(DIST, clean, 'index.html') : path.join(DIST, 'index.html');
-  return fs.existsSync(f) || fs.existsSync(path.join(DIST, urlPath));
+  if (fs.existsSync(f)) return true;
+  // A directory on disk is not a page: only a file link may resolve without index.html.
+  if (urlPath.endsWith('/')) return false;
+  return fs.existsSync(path.join(DIST, clean));
 };
 
 let broken = 0, emptyTitle = 0, emptyDesc = 0, dupCount = 0;

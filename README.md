@@ -19,11 +19,11 @@ A niche tool site with three layers, all generated from data:
    - `/tools/flow-calculator/` — speed × layer height × line width vs hotend limit.
    - `/tools/farm-calculator/` — throughput, revenue and profit.
 2. **Reference** — 15 filament guides, 20 pairwise comparisons, 22 printers,
-   241 printer × material settings pages, 19 troubleshooting guides.
+   241 printer × material settings pages, 19 troubleshooting guides, 30 cost guides.
 3. **Programmatic SEO** — every printer × material combination is its own page with
    settings tuned to that machine's extruder (direct vs Bowden), enclosure and speed.
 
-Total: **731 pages** (406 English + 325 Chinese), generated in under a second, zero dependencies.
+Total: **764 pages** (407 English + 357 Chinese), generated in under a second, zero dependencies.
 
 ## Commands
 

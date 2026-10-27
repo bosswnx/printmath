@@ -137,6 +137,106 @@ function materialGuide(f) {
   };
 }
 
+// Hub page for /guides/calibration/. It is linked from every material guide's
+// breadcrumb and bottom card, so it has to exist as a real page.
+function calibrationHub() {
+  const path = '/guides/calibration/';
+  const body = `${crumbs([{ name: t('common.home', 'Home'), path: '/' }, { name: t('nav.guides', 'Guides'), path: '/guides/' }, { name: t('cal.indexCrumb', 'Calibration'), path }])}
+<div class="wrap">
+  <div class="hero">
+    <h1>${esc(t('cal.hubH1', 'Calibration by material: 15 temperature tower and flow test guides'))}</h1>
+    <p class="lead">${esc(
+      t(
+        'cal.hubLead',
+        'Every material has its own temperature range, moisture sensitivity and enclosure needs, so a preset is only ever a starting point. Here are all 15 common FDM filaments in one two-test routine: a temperature tower first, then a flow test.'
+      )
+    )}</p>
+  </div>
+
+  <h2>${esc(t('cal.hubWhyH2', 'Why calibrate per material'))}</h2>
+  <p>${esc(
+    t(
+      'cal.hubWhyBody',
+      'PLA bonding well at 210 °C on your machine does not mean PETG will: PETG usually needs around 240 °C, and ABS or ASA also need a closed chamber to control shrinkage. Print PETG at PLA temperatures and the layers split; print PLA at ABS temperatures and it strings and sags. The datasheet gives you a range — your machine, nozzle and spool decide the point inside it. A temperature tower and a flow test are the cheapest way to find that point, at a cost of a few tens of grams.'
+    )
+  )}</p>
+
+  <h2>${esc(t('cal.hubHowH2', 'How to use these guides'))}</h2>
+  <ol>
+    <li>${esc(t('cal.hubHow1', 'Open the guide for your material and set the nozzle and bed from its starting-point table.'))}</li>
+    <li>${esc(t('cal.hubHow2', 'Print a five-band temperature tower across the material range and read it for layer adhesion, stringing and surface.'))}</li>
+    <li>${esc(t('cal.hubHow3', 'Set the extrusion multiplier with a single-wall cube and calipers, then run a retraction test to remove stringing.'))}</li>
+  </ol>
+  <p class="note">${esc(t('cal.hubHowNote', 'Change one variable at a time. Fix temperature before flow, or you will not know which change did the work.'))}</p>
+
+  <h2>${esc(t('cal.hubTableH2', 'All materials at a glance'))}</h2>
+  <p class="muted">${esc(t('cal.hubTableLead', 'Nozzle and bed are starting ranges; drying is the schedule for moisture-sensitive materials. Open a guide for the full routine.'))}</p>
+  <div class="table-scroll"><table>
+    <thead><tr><th>${esc(t('cal.thMaterial', 'Material'))}</th><th>${esc(t('cal.thNozzle', 'Nozzle'))}</th><th>${esc(t('cal.thBed', 'Bed'))}</th><th>${esc(t('cal.thDry', 'Drying'))}</th><th>${esc(t('cal.thEnclosure', 'Enclosure'))}</th><th>${esc(t('cal.thGuide', 'Guide'))}</th></tr></thead>
+    <tbody>
+${filaments
+  .map(
+    (f) => `      <tr><td><a href="/guides/calibration/${f.id}/">${esc(fname(f))}</a></td><td>${f.nozzle[0]}–${f.nozzle[1]} °C</td><td>${f.bed[0]}–${f.bed[1]} °C</td><td>${f.dryTemp} °C × ${f.dryHours} h</td><td>${f.enclosure ? esc(t('cal.enclosureYes', 'Recommended')) : esc(t('cal.enclosureNo', 'Not required'))}</td><td><a href="/guides/calibration/${f.id}/">${esc(t('cal.guideLink', 'Calibration guide'))} →</a></td></tr>`
+  )
+  .join('\n')}
+    </tbody>
+  </table></div>
+
+  <h2>${esc(t('cal.hubCheckH2', 'What a finished calibration looks like'))}</h2>
+  <ul>
+    <li>${esc(t('cal.hubCheck1', 'The chosen tower band snaps cleanly with no visible stringing and no blobby surface.'))}</li>
+    <li>${esc(t('cal.hubCheck2', 'The single-wall cube measures within 0.02 mm of the target line width.'))}</li>
+    <li>${esc(t('cal.hubCheck3', 'Two retraction towers 30 mm apart print with no strings, and layer adhesion has not got worse.'))}</li>
+  </ul>
+
+  <h2>${esc(t('cal.toolsH2', 'Tools that help'))}</h2>
+  <div class="grid cols-3">
+    <a class="card link" href="/tools/flow-calculator/"><h3>${esc(t('tool.flow.short', 'Volumetric flow calculator'))}</h3><p class="muted">${esc(t('cal.toolFlowDesc', 'Check whether your speed exceeds what the hotend can melt.'))}</p></a>
+    <a class="card link" href="/tools/gcode-analyzer/"><h3>${esc(t('tool.gcode.short', 'G-code analyzer'))}</h3><p class="muted">${esc(t('cal.toolGcodeDesc', 'Read the real filament use and time from a sliced file.'))}</p></a>
+    <a class="card link" href="/tools/cost-calculator/"><h3>${esc(t('tool.cost.short', 'Print cost calculator'))}</h3><p class="muted">${esc(t('cal.toolCostDesc', 'Price the part once the profile is dialled in.'))}</p></a>
+  </div>
+
+  <h2>${esc(t('cal.hubFaqH2', 'FAQ'))}</h2>
+  <div class="grid cols-2">
+    <div class="card"><h3>${esc(t('cal.hubQ1', 'Do I need to calibrate every material separately?'))}</h3><p class="muted">${esc(t('cal.hubA1', 'Yes. Temperature, flow and retraction all depend on how the material melts and shrinks, and those differ a lot. When you open a new batch of the same spool, re-checking flow is usually enough.'))}</p></div>
+    <div class="card"><h3>${esc(t('cal.hubQ2', 'Can I calibrate flow without calipers?'))}</h3><p class="muted">${esc(t('cal.hubA2', 'You can judge a flow test piece by eye, but calipers get the error under 0.02 mm. It is a cheap tool and worth buying.'))}</p></div>
+    <div class="card"><h3>${esc(t('cal.hubQ3', 'How long does a calibration last?'))}</h3><p class="muted">${esc(t('cal.hubA3', 'As long as the spool, unless you change the nozzle or see an extrusion problem. Save the final numbers as a filament preset in your slicer and reuse them.'))}</p></div>
+  </div>
+</div>`;
+
+  return {
+    path,
+    html: layout({
+      title: t('cal.hubTitle', 'Calibration guides for all 15 filaments — temperature tower and flow test'),
+      description: t(
+        'cal.hubDesc',
+        'A calibration guide for every FDM filament: real nozzle and bed ranges, drying schedules, enclosure needs, and how to read a temperature tower and set the extrusion multiplier.'
+      ),
+      path,
+      body,
+      jsonLd: [
+        breadcrumbs([{ name: t('common.home', 'Home'), path: '/' }, { name: t('nav.guides', 'Guides'), path: '/guides/' }, { name: t('cal.indexCrumb', 'Calibration'), path }]),
+        {
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: t('cal.hubH1', 'Calibration by material: 15 temperature tower and flow test guides'),
+          description: t('cal.hubDesc', 'A calibration guide for every FDM filament: real nozzle and bed ranges, drying schedules, enclosure needs, and how to read a temperature tower and set the extrusion multiplier.'),
+          hasPart: filaments.map((f) => ({
+            '@type': 'HowTo',
+            name: t('cal.materialH1', '{name} calibration: temperature tower and flow test', { name: fname(f) }),
+            url: `${SITE.baseUrl}/guides/calibration/${f.id}/`,
+          })),
+        },
+        faq([
+          { q: t('cal.hubQ1', 'Do I need to calibrate every material separately?'), a: t('cal.hubA1', 'Yes. Temperature, flow and retraction all depend on how the material melts and shrinks, and those differ a lot. When you open a new batch of the same spool, re-checking flow is usually enough.') },
+          { q: t('cal.hubQ2', 'Can I calibrate flow without calipers?'), a: t('cal.hubA2', 'You can judge a flow test piece by eye, but calipers get the error under 0.02 mm. It is a cheap tool and worth buying.') },
+          { q: t('cal.hubQ3', 'How long does a calibration last?'), a: t('cal.hubA3', 'As long as the spool, unless you change the nozzle or see an extrusion problem. Save the final numbers as a filament preset in your slicer and reuse them.') },
+        ]),
+      ],
+    }),
+  };
+}
+
 function buildGuides() {
   const pages = [];
 
@@ -159,6 +259,7 @@ function buildGuides() {
   <div class="grid cols-3">
 ${filaments.map((f) => `    <a class="card link" href="/guides/calibration/${f.id}/"><h3>${esc(fname(f))}</h3><p class="muted tiny">${f.nozzle[0]}–${f.nozzle[1]} °C · ${f.bed[0]}–${f.bed[1]} °C bed · dry ${f.dryTemp} °C/${f.dryHours} h</p></a>`).join('\n')}
   </div>
+  <p><a href="/guides/calibration/">${esc(t('cal.allMaterials', 'Calibration guides for every material'))} →</a></p>
 
   <h2>${esc(t('cal.toolsH2', 'Tools that help'))}</h2>
   <div class="grid cols-3">
@@ -170,6 +271,8 @@ ${filaments.map((f) => `    <a class="card link" href="/guides/calibration/${f.i
       jsonLd: [breadcrumbs([{ name: t('common.home', 'Home'), path: '/' }, { name: t('nav.guides', 'Guides'), path: '/guides/' }])],
     }),
   });
+
+  pages.push(calibrationHub());
 
   filaments.forEach((f) => pages.push(materialGuide(f)));
   return pages;

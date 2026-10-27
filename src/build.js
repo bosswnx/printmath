@@ -23,7 +23,7 @@ const PUBLIC = path.join(ROOT, 'public');
 
 // Sections that are fully translated. Anything else stays English-only, and links
 // to it from Chinese pages fall back to the English page.
-const ZH_PREFIXES = ['/tools/', '/filaments/', '/troubleshooting/', '/settings/', '/guides/'];
+const ZH_PREFIXES = ['/tools/', '/filaments/', '/troubleshooting/', '/settings/', '/guides/', '/cost/'];
 const ZH_EXACT = new Set(['/', '/about/', '/privacy/', '/terms/', '/search/', '/filaments/compare/']);
 
 const zhReady = (p) => ZH_EXACT.has(p.path) || ZH_PREFIXES.some((pre) => p.path.startsWith(pre));
